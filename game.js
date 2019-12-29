@@ -29,9 +29,11 @@ function checkForWinner() {
 function checkForWinnerByRow() {
     // check top row
     let data = $('.game-grid-row.top .game-square.selected .marker').text();
-    console.log(data);
     if (checkForWinByPlayerX(data)) {
         console.log('X Wins!');
+    }
+    if (checkForWinByPlayerO(data)) {
+        console.log('O Wins!');
     }
     // check middle row
 
@@ -40,4 +42,8 @@ function checkForWinnerByRow() {
 
 function checkForWinByPlayerX(data) {
     return data === 'XXX';
+}
+
+function checkForWinByPlayerO(data) {
+    return data === 'OOO';
 }
