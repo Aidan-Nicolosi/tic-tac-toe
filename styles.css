@@ -1,0 +1,59 @@
+* {
+    box-sizing: content-box;
+}
+
+.game-grid {
+    width: 600px;
+    border: none;
+    margin-left: auto;
+    margin-right: auto;
+    height: 600px;
+}
+
+.game-grid-row {
+    width: 100%;
+    border: none;
+    margin-bottom: -10px;
+}
+
+.game-grid-row.center {
+    border-top: 5px solid black;
+    border-bottom: 5px solid black;
+}
+
+.game-square {
+    display: inline-block;
+    width: 190px;
+    height: 190px;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.game-square.center {
+    border-left: 5px solid black;
+    border-right: 5px solid black;
+}
+
+.marker {
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    text-align: center;
+    font-size: 187px;
+    opacity: 0.0;
+    transition: opacity ease-in-out 150ms;
+}
+
+.marker:hover {
+    opacity: 0.3;
+}
+
+.game-square.selected {
+    cursor: default;
+}
+
+.game-square.selected .marker {
+    opacity: 1.0;
+}
