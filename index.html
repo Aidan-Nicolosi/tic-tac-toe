@@ -11,48 +11,46 @@
 </head>
 
 <body>
+    <div class="message-container">
+        <span class="message"></span>
+    </div>
     <div class="game-grid">
         <div class="game-grid-row top">
-            <div class="game-square left" data-row="0" data_column="0">
+            <div class="game-square row-1 col-1 dia-1" data-row="0" data_column="0">
                 <span class="marker">X</span>
             </div>
-            <div class="game-square center" data-row="0" data_column="1">
+            <div class="game-square row-1 col-2" data-row="0" data_column="1">
                 <span class="marker">X</span>
-
             </div>
-            <div class="game-square right" data-row="0" data_column="2">
+            <div class="game-square row-1 col-3 dia-2" data-row="0" data_column="2">
                 <span class="marker">X</span>
-
             </div>
         </div>
         <div class="game-grid-row center">
-            <div class="game-square left" data-row="1" data_column="0">
+            <div class="game-square row-2 col-1" data-row="1" data_column="0">
                 <span class="marker">X</span>
-
             </div>
-            <div class="game-square center" data-row="2" data_column="0">
+            <div class="game-square row-2 col-2 dia-1 dia-2" data-row="2" data_column="0">
                 <span class="marker">X</span>
-
             </div>
-            <div class="game-square right" data-row="1" data_column="1">
+            <div class="game-square row-2 col-3" data-row="1" data_column="1">
                 <span class="marker">X</span>
-
             </div>
         </div>
         <div class="game-grid-row bottom">
-            <div class="game-square left" data-row="2" data_column="1">
+            <div class="game-square row-3 col-1 dia-2" data-row="2" data_column="1">
                 <span class="marker">X</span>
-
             </div>
-            <div class="game-square center" data-row="1" data_column="2">
+            <div class="game-square row-3 col-2" data-row="1" data_column="2">
                 <span class="marker">X</span>
-
             </div>
-            <div class="game-square right" data-row="2" data_column="2">
+            <div class="game-square row-3 col-3 dia-1" data-row="2" data_column="2">
                 <span class="marker">X</span>
-
             </div>
         </div>
+    </div>
+    <div class="button-container">
+        <button class="reset">New Game</button>
     </div>
     <script type="text/javascript" src="jquery-3.4.1.slim.js"></script>
     <script type="text/javascript" src="game.js"></script>
