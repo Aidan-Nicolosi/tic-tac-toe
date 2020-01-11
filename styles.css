@@ -66,6 +66,10 @@
     opacity: 0.2;
 }
 
+.game-grid.disabled .game-square {
+    cursor: default;
+}
+
 .game-grid.game-over .game-square .marker {
     opacity: 0.2;
 }
@@ -86,7 +90,8 @@
     text-align: center;
 }
 
-.reset {
-    display: none;
+.new-game {
     cursor: pointer;
+    margin-left: 5px;
+    margin-right: 5px;
 }

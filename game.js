@@ -14,15 +14,23 @@ const winGroups = [
 
 let startingPlayer = PLAYER_X;
 let currentPlayer = PLAYER_X;
+let computerPlayer = PLAYER_O;
 let winningPlayer;
+let onePlayerMode = false;
+let gameOver = true;
+let gameGridDisabled = true;
 
 // click handler for each game square
 $('.game-square').click(processPlayerTurn);
 
-// click handler for the "New Game" button
-$('.reset').click(newGame);
+// click handlers for the "New Game" buttons
+$('.one-player').click(newOnePlayerGame);
+$('.two-player').click(newTwoPlayerGame);
 
 function processPlayerTurn() {
+    if (isGameGridDisabled()) {
+        return;
+    }
     // "$(this)" represents the square that was clicked on.  here, we will 
     // add a "selected" class to it so that it will display the selected 
     // marker, and not be eligible for selection again
@@ -55,6 +63,26 @@ function processPlayerTurn() {
     alternateCurrentPlayer();
     // make sure the markers are updated for the other player
     updateMarkers();
+
+    // check if the new current player is the same as computerPlayer.  if so, process the computer player's turn.
+    if (currentPlayer === computerPlayer) {
+        // disableGameGrid();
+        setTimeout(processComputerTurn, 750);
+    }
+}
+
+function isGameGridDisabled() {
+    return gameGridDisabled;
+}
+
+function disableGameGrid() {
+    $('.game-grid').addClass('disabled');
+    gameGridDisabled = true;
+}
+
+function enableGameGrid() {
+    $('.game-grid').removeClass('disabled');
+    gameGridDisabled = false;
 }
 
 // stop game play by marking all game squares as 
@@ -70,24 +98,41 @@ function stopGame() {
     $('.game-grid')
         .addClass('game-over');
 
-    $('.reset').show();
+    disableGameGrid();
+
+    $('.new-game').show();
+    alternateStartingPlayer();
 }
 
-// reset the game grid for a new game
-function newGame() {
+// reset the game grid for a new one-player game
+function newOnePlayerGame() {
+    if (onePlayerMode === false) {
+        startingPlayer = PLAYER_X;
+    }
+    
+    onePlayerMode = true;
+    initializeGame();
+
+    if (startingPlayer === PLAYER_O) {
+        processComputerTurn();
+    }
+}
+
+// reset the game grid for a new two-player game
+function newTwoPlayerGame() {
+    initializeGame();
+}
+
+function initializeGame() {
     winningPlayer = '';
     $('.game-square').removeClass('selected winning-square');
     $('.marker').text('');
     $('.message').text('');
-    $('.reset').hide();
-    $('.game-grid').removeClass('game-over');
-    alternateStartingPlayer();
+    $('.new-game').hide();
+    $('.game-grid').removeClass('game-over disabled');
     setCurrentPlayer(startingPlayer);
-    // use a delay before updating the markers so they
-    // don't flash on the game grid before all of the
-    // previous updates take effect.  we'll try to come
-    // up with a better fix later.
-    setTimeout(updateMarkers, 200);
+    updateMarkers();
+    enableGameGrid();
 }
 
 // returns true if all nine game squares are selected,
@@ -107,19 +152,19 @@ function setCurrentPlayer(player) {
 
 // alternates between PLAYER_X and PLAYER_O for current player
 function alternateCurrentPlayer() {
-    if (currentPlayer === PLAYER_X) {
-        currentPlayer = PLAYER_O;
-    } else {
-        currentPlayer = PLAYER_X;
-    }
+    currentPlayer = getOpposingPlayer(currentPlayer);
 }
 
 // alternates between PLAYER_X and PLAYER_O for starting player
 function alternateStartingPlayer() {
-    if (startingPlayer === PLAYER_X) {
-        startingPlayer = PLAYER_O;
+    startingPlayer = getOpposingPlayer(startingPlayer);
+}
+
+function getOpposingPlayer(player) {
+    if (player === PLAYER_X) {
+        return PLAYER_O;
     } else {
-        startingPlayer = PLAYER_X;
+        return PLAYER_X;
     }
 }
 
@@ -159,4 +204,129 @@ function checkForAndMarkWinnerByGroup(groupSelector) {
         $('.game-square.selected.' + groupSelector)
             .addClass('winning-square');
     } 
+}
+
+function processComputerTurn() {
+    let turnProcessed = false;
+    
+    // loop through groups
+    //    for each group
+    //       can current player win with this group?
+    //         yes, then select final square in this group and break
+    for (let groupSelector of winGroups) {
+        if (currentPlayerCanWin(groupSelector)) {
+            selectFinalSquare(groupSelector);
+            turnProcessed = true;
+            break;
+        }
+    }
+     
+    // if we took our turn, then exit (return)
+    if (turnProcessed) {
+        // enableGameGrid();
+        return;
+    }
+    
+    // loop through groups
+    //     for each group
+    //        must current player block in this group?
+    //           yes, then select final square in this group and break             
+    for (let groupSelector of winGroups) {
+        if (currentPlayerMustBlock(groupSelector)) {
+            selectFinalSquare(groupSelector);
+            turnProcessed = true;
+            break;
+        }
+    }
+    
+    // if we took our turn, then exit (return)
+    if (turnProcessed) {
+        // enableGameGrid();
+        return;
+    }
+
+    // is center square available?
+    if (isCenterSquareAvailable()) {
+        // yes, then select it and exit (return)
+        selectCenterSquare();
+        turnProcessed = true;
+        // enableGameGrid();
+        return;
+    }
+
+    // is corner square available?
+    if (isCornerSquareAvailable()) {
+        // yes, then select it and exit (return)
+        selectCornerSquare();
+        turnProcessed = true;
+        // enableGameGrid();
+        return;
+    }
+
+    // is edge square available?
+    if (isEdgeSquareAvailable()) {
+        // yes, then select it and exit (return)
+        selectEdgeSquare();
+        turnProcessed = true;
+        // enableGameGrid();
+        return;
+    }
+
+}
+
+// returns true if the current player has two squares in
+// this group and the remaining square is open
+function currentPlayerCanWin(groupSelector) {
+    const markerSelections = $('.game-square.selected.' + groupSelector)
+        .children('.marker')
+        .text();
+    
+    const player = currentPlayer;
+    const matcher = player + player;
+
+    return markerSelections === matcher;
+}
+
+// returns true if the other player has two squares in this
+// group and the remaining square is open
+function currentPlayerMustBlock(groupSelector) {
+    const markerSelections = $('.game-square.selected.' + groupSelector)
+        .children('.marker')
+        .text();
+    
+    const player = getOpposingPlayer(currentPlayer);
+    const matcher = player + player;
+
+    return markerSelections === matcher;
+}
+
+// selects the final avaialable square in this group for the
+// current player
+function selectFinalSquare(groupSelector) {
+    $('.game-square.' + groupSelector).not('.selected').first().click(); 
+}
+
+// returns true if the center square is available for selection
+function isCenterSquareAvailable() {
+    return $('.game-square.center').not('.selected').length === 1;
+}
+
+function selectCenterSquare() {
+    $('.game-square.center').not('.selected').first().click();
+}
+
+function isCornerSquareAvailable() {
+    return $('.game-square.corner').not('.selected').length > 0;
+}
+
+function selectCornerSquare() {
+    $('.game-square.corner').not('.selected').first().click();
+}
+
+function isEdgeSquareAvailable() {
+    return $('.game-square.edge').not('.selected').length > 0;
+}
+
+function selectEdgeSquare() {
+    $('.game-square.edge').not('.selected').first().click();
 }
