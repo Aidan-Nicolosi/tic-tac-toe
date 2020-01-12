@@ -70,20 +70,36 @@
     cursor: default;
 }
 
-.game-grid.game-over .game-square .marker {
+.game-grid .game-square.selected .marker,
+.game-grid .game-square.selected .marker:hover {
+    opacity: 1.0;
+}
+
+.game-grid.disabled .game-square .marker:hover {
+    opacity: 0.0;
+}
+
+.game-grid.disabled .game-square.selected .marker:hover {
+    opacity: 1.0;
+}
+
+.game-grid.game-over .game-square .marker,
+.game-grid.game-over .game-square .marker:hover {
+    opacity: 0.0;
+}
+
+.game-grid.game-over .game-square.selected .marker,
+.game-grid.game-over .game-square.selected .marker:hover {
     opacity: 0.2;
 }
 
-.game-grid.game-over .game-square.winning-square .marker {
+.game-grid.game-over .game-square.winning-square .marker,
+.game-grid.game-over .game-square.winning-square .marker:hover {
     opacity: 1.0;
 }
 
 .game-square.selected {
     cursor: default;
-}
-
-.game-square.selected .marker {
-    opacity: 1.0;
 }
 
 .button-container {

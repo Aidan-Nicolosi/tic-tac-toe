@@ -66,7 +66,7 @@ function processPlayerTurn() {
 
     // check if the new current player is the same as computerPlayer.  if so, process the computer player's turn.
     if (currentPlayer === computerPlayer) {
-        // disableGameGrid();
+        disableGameGrid();
         setTimeout(processComputerTurn, 750);
     }
 }
@@ -109,7 +109,7 @@ function newOnePlayerGame() {
     if (onePlayerMode === false) {
         startingPlayer = PLAYER_X;
     }
-    
+
     onePlayerMode = true;
     initializeGame();
 
@@ -208,7 +208,8 @@ function checkForAndMarkWinnerByGroup(groupSelector) {
 
 function processComputerTurn() {
     let turnProcessed = false;
-    
+    enableGameGrid();
+
     // loop through groups
     //    for each group
     //       can current player win with this group?
@@ -223,7 +224,6 @@ function processComputerTurn() {
      
     // if we took our turn, then exit (return)
     if (turnProcessed) {
-        // enableGameGrid();
         return;
     }
     
@@ -241,7 +241,6 @@ function processComputerTurn() {
     
     // if we took our turn, then exit (return)
     if (turnProcessed) {
-        // enableGameGrid();
         return;
     }
 
@@ -250,7 +249,6 @@ function processComputerTurn() {
         // yes, then select it and exit (return)
         selectCenterSquare();
         turnProcessed = true;
-        // enableGameGrid();
         return;
     }
 
@@ -259,7 +257,6 @@ function processComputerTurn() {
         // yes, then select it and exit (return)
         selectCornerSquare();
         turnProcessed = true;
-        // enableGameGrid();
         return;
     }
 
@@ -268,7 +265,6 @@ function processComputerTurn() {
         // yes, then select it and exit (return)
         selectEdgeSquare();
         turnProcessed = true;
-        // enableGameGrid();
         return;
     }
 
